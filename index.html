@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Programme Recomposition 6 Semaines</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+–bg: #0a0a0f;
+–surface: #12121a;
+–surface2: #1a1a28;
+–surface3: #222236;
+–accent: #e94560;
+–accent2: #0f3460;
+–green: #16c784;
+–yellow: #f0b90b;
+–blue: #4e8cff;
+–text: #e8e8ef;
+–text2: #8888a0;
+–border: #2a2a3e;
+–input-bg: #0d1929;
+–radius: 14px;
+}
+
+- { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+html { scroll-behavior: smooth; }
+
+body {
+font-family: ‘Space Grotesk’, sans-serif;
+background: var(–bg);
+color: var(–text);
+min-height: 100vh;
+overflow-x: hidden;
+padding-bottom: 100px;
+}
+
+/* ====== TOP NAV ====== */
+.top-bar {
+position: sticky; top: 0; z-index: 100;
+background: rgba(10,10,15,0.92);
+backdrop-filter: blur(20px);
+border-bottom: 1px solid var(–border);
+padding: 12px 16px;
+}
+
+.top-bar h1 {
+font-size: 16px;
+font-weight: 700;
+background: linear-gradient(135deg, var(–accent), var(–yellow));
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+text-align: center;
+}
+
+/* ====== WEEK SELECTOR ====== */
+.week-selector {
+display: flex; gap: 6px; padding: 12px 16px;
+overflow-x: auto; scrollbar-width: none;
+}
+.week-selector::-webkit-scrollbar { display:none; }
+
+.week-btn {
+flex-shrink: 0;
+padding: 8px 18px;
+border-radius: 20px;
+border: 1.5px solid var(–border);
+background: var(–surface);
+color: var(–text2);
+font-family: ‘Space Grotesk’, sans-serif;
+font-size: 13px;
+font-weight: 600;
+cursor: pointer;
+transition: all .2s;
+}
+.week-btn.active {
+background: var(–accent);
+border-color: var(–accent);
+color: #fff;
+box-shadow: 0 4px 15px rgba(233,69,96,0.3);
+}
+
+/* ====== WEEK FOCUS ====== */
+.week-focus {
+margin: 8px 16px;
+padding: 12px 16px;
+background: linear-gradient(135deg, rgba(233,69,96,0.12), rgba(15,52,96,0.12));
+border: 1px solid rgba(233,69,96,0.2);
+border-radius: var(–radius);
+font-size: 13px;
+color: var(–yellow);
+font-weight: 600;
+text-align: center;
+}
+
+/* ====== DAILY METRICS ====== */
+.daily-metrics {
+margin: 12px 16px;
+padding: 16px;
+background: var(–surface);
+border-radius: var(–radius);
+border: 1px solid var(–border);
+}
+
+.daily-metrics h3 {
+font-size: 12px;
+text-transform: uppercase;
+letter-spacing: 1.5px;
+color: var(–accent);
+margin-bottom: 12px;
+}
+
+.metrics-grid {
+display: grid;
+grid-template-columns: 1fr 1fr 1fr;
+gap: 8px;
+}
+
+.metric-item {
+display: flex; flex-direction: column; gap: 4px;
+}
+
+.metric-item label {
+font-size: 10px;
+color: var(–text2);
+text-transform: uppercase;
+letter-spacing: 0.5px;
+}
+
+.metric-item input {
+background: var(–input-bg);
+border: 1.5px solid var(–border);
+border-radius: 8px;
+color: var(–blue);
+font-family: ‘JetBrains Mono’, monospace;
+font-size: 15px;
+font-weight: 600;
+padding: 8px;
+text-align: center;
+width: 100%;
+transition: border-color .2s;
+}
+.metric-item input:focus {
+outline: none;
+border-color: var(–accent);
+}
+
+/* ====== DAY TABS ====== */
+.day-tabs {
+display: flex; gap: 4px; padding: 8px 16px;
+overflow-x: auto; scrollbar-width: none;
+}
+.day-tabs::-webkit-scrollbar { display:none; }
+
+.day-tab {
+flex-shrink: 0;
+padding: 10px 16px;
+border-radius: 12px;
+border: 1.5px solid var(–border);
+background: var(–surface);
+color: var(–text2);
+font-family: ‘Space Grotesk’, sans-serif;
+font-size: 12px;
+font-weight: 600;
+cursor: pointer;
+transition: all .2s;
+text-align: center;
+min-width: 70px;
+}
+.day-tab.active {
+background: var(–accent2);
+border-color: var(–blue);
+color: #fff;
+}
+.day-tab .day-num { display: block; font-size: 14px; font-weight: 700; }
+.day-tab .day-name { display: block; font-size: 9px; margin-top: 2px; opacity: .7; }
+
+/* ====== SESSION CARD ====== */
+.session-card {
+margin: 12px 16px;
+display: none;
+}
+.session-card.active { display: block; }
+
+.session-header {
+padding: 20px;
+background: linear-gradient(135deg, var(–surface2), var(–surface3));
+border-radius: var(–radius) var(–radius) 0 0;
+border: 1px solid var(–border);
+border-bottom: none;
+}
+
+.session-header h2 {
+font-size: 18px;
+font-weight: 700;
+margin-bottom: 6px;
+}
+
+.session-header .objective {
+font-size: 12px;
+color: var(–green);
+font-weight: 500;
+}
+
+/* Warmup collapsible */
+.warmup-toggle {
+display: flex; align-items: center; justify-content: space-between;
+padding: 12px 20px;
+background: var(–surface);
+border: 1px solid var(–border);
+border-bottom: none;
+cursor: pointer;
+font-size: 12px;
+color: var(–text2);
+font-weight: 600;
+text-transform: uppercase;
+letter-spacing: 1px;
+}
+.warmup-toggle .arrow { transition: transform .3s; }
+.warmup-toggle.open .arrow { transform: rotate(180deg); }
+
+.warmup-content {
+padding: 0 20px;
+max-height: 0;
+overflow: hidden;
+background: var(–surface);
+border: 1px solid var(–border);
+border-top: none; border-bottom: none;
+transition: max-height .3s, padding .3s;
+font-size: 12px;
+color: var(–text2);
+line-height: 1.8;
+}
+.warmup-content.open {
+max-height: 500px;
+padding: 12px 20px;
+}
+
+/* ====== EXERCISE TABLE ====== */
+.exercise-list {
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: 0 0 var(–radius) var(–radius);
+}
+
+.exercise-item {
+border-bottom: 1px solid var(–border);
+transition: background .2s;
+}
+.exercise-item:last-child { border-bottom: none; }
+
+.exercise-header {
+display: flex; align-items: center; gap: 10px;
+padding: 14px 16px;
+cursor: pointer;
+}
+
+.ex-num {
+width: 28px; height: 28px;
+background: var(–accent2);
+border-radius: 8px;
+display: flex; align-items: center; justify-content: center;
+font-size: 12px;
+font-weight: 700;
+flex-shrink: 0;
+color: var(–blue);
+}
+
+.ex-info { flex: 1; }
+.ex-info .ex-name { font-size: 14px; font-weight: 600; }
+.ex-info .ex-params {
+font-size: 11px;
+color: var(–text2);
+margin-top: 2px;
+font-family: ‘JetBrains Mono’, monospace;
+}
+
+.ex-status {
+font-size: 18px;
+flex-shrink: 0;
+}
+
+.ex-expand { transition: transform .3s; color: var(–text2); font-size: 14px; }
+.exercise-item.open .ex-expand { transform: rotate(180deg); }
+
+/* Tracking panel */
+.tracking-panel {
+max-height: 0;
+overflow: hidden;
+transition: max-height .4s ease;
+background: var(–input-bg);
+}
+.exercise-item.open .tracking-panel {
+max-height: 600px;
+}
+
+.tracking-grid {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 8px;
+padding: 12px 16px;
+}
+
+.track-field {
+display: flex; flex-direction: column; gap: 3px;
+}
+
+.track-field label {
+font-size: 9px;
+text-transform: uppercase;
+letter-spacing: 0.5px;
+color: var(–text2);
+font-weight: 600;
+}
+
+.track-field input, .track-field select {
+background: var(–surface);
+border: 1.5px solid var(–border);
+border-radius: 8px;
+color: var(–blue);
+font-family: ‘JetBrains Mono’, monospace;
+font-size: 14px;
+font-weight: 600;
+padding: 10px;
+text-align: center;
+width: 100%;
+}
+.track-field input:focus, .track-field select:focus {
+outline: none;
+border-color: var(–accent);
+}
+
+.track-field select {
+appearance: none;
+-webkit-appearance: none;
+}
+
+/* Recommendation bar */
+.reco-bar {
+padding: 10px 16px;
+background: rgba(15,52,96,0.3);
+border-top: 1px solid var(–border);
+font-size: 12px;
+font-weight: 600;
+display: flex; align-items: center; gap: 8px;
+}
+.reco-bar .reco-icon { font-size: 16px; }
+.reco-bar .reco-text { color: var(–text); }
+
+.reco-confirm {
+margin-left: auto;
+padding: 6px 12px;
+border-radius: 8px;
+border: none;
+font-size: 11px;
+font-weight: 700;
+font-family: ‘Space Grotesk’, sans-serif;
+cursor: pointer;
+transition: all .2s;
+}
+.reco-confirm.apply {
+background: var(–green);
+color: #000;
+}
+.reco-confirm.ignore {
+background: var(–surface3);
+color: var(–text2);
+margin-left: 4px;
+}
+
+/* ====== CARDIO SECTION ====== */
+.cardio-section {
+margin: 12px 16px;
+padding: 16px;
+background: linear-gradient(135deg, rgba(22,199,132,0.08), rgba(22,199,132,0.02));
+border: 1px solid rgba(22,199,132,0.2);
+border-radius: var(–radius);
+}
+
+.cardio-section h3 {
+font-size: 12px;
+text-transform: uppercase;
+letter-spacing: 1.5px;
+color: var(–green);
+margin-bottom: 8px;
+}
+.cardio-section p {
+font-size: 14px;
+font-weight: 600;
+}
+
+/* ====== ABDOS SECTION ====== */
+.abdos-section {
+margin: 12px 16px;
+padding: 16px;
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: var(–radius);
+}
+.abdos-section h3 {
+font-size: 12px;
+text-transform: uppercase;
+letter-spacing: 1.5px;
+color: var(–yellow);
+margin-bottom: 10px;
+}
+.abdos-item {
+padding: 8px 0;
+border-bottom: 1px solid var(–border);
+font-size: 13px;
+display: flex; gap: 8px; align-items: center;
+}
+.abdos-item:last-child { border-bottom: none; }
+.abdos-num {
+width: 22px; height: 22px;
+background: rgba(240,185,11,0.15);
+border-radius: 6px;
+display: flex; align-items: center; justify-content: center;
+font-size: 11px;
+font-weight: 700;
+color: var(–yellow);
+flex-shrink: 0;
+}
+
+/* ====== STRETCH SECTION ====== */
+.stretch-section {
+margin: 12px 16px;
+padding: 16px;
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: var(–radius);
+}
+.stretch-section h3 {
+font-size: 12px;
+text-transform: uppercase;
+letter-spacing: 1.5px;
+color: var(–blue);
+margin-bottom: 10px;
+}
+
+/* ====== MOTEUR ALERT ====== */
+.motor-alert {
+margin: 12px 16px;
+padding: 16px;
+border-radius: var(–radius);
+border: 1.5px solid;
+display: none;
+}
+.motor-alert.show { display: block; }
+.motor-alert.warning {
+background: rgba(240,185,11,0.08);
+border-color: rgba(240,185,11,0.3);
+}
+.motor-alert.danger {
+background: rgba(233,69,96,0.08);
+border-color: rgba(233,69,96,0.3);
+}
+.motor-alert.success {
+background: rgba(22,199,132,0.08);
+border-color: rgba(22,199,132,0.3);
+}
+.motor-alert h4 {
+font-size: 13px;
+margin-bottom: 6px;
+}
+.motor-alert p {
+font-size: 12px;
+color: var(–text2);
+line-height: 1.6;
+}
+.motor-alert .alert-actions {
+display: flex; gap: 8px; margin-top: 10px;
+}
+
+/* ====== BOTTOM SAVE BAR ====== */
+.bottom-bar {
+position: fixed; bottom: 0; left: 0; right: 0;
+background: rgba(10,10,15,0.95);
+backdrop-filter: blur(20px);
+border-top: 1px solid var(–border);
+padding: 12px 16px;
+display: flex; gap: 8px;
+z-index: 100;
+}
+
+.bottom-bar button {
+flex: 1;
+padding: 14px;
+border-radius: 12px;
+border: none;
+font-family: ‘Space Grotesk’, sans-serif;
+font-size: 14px;
+font-weight: 700;
+cursor: pointer;
+transition: all .2s;
+}
+
+.btn-save {
+background: var(–accent);
+color: #fff;
+}
+.btn-save:active { transform: scale(0.97); }
+
+.btn-export {
+background: var(–surface3);
+color: var(–text);
+flex: 0.5;
+}
+
+/* ====== ANIMATIONS ====== */
+@keyframes slideUp {
+from { opacity: 0; transform: translateY(20px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+.session-card.active {
+animation: slideUp .3s ease;
+}
+
+/* ====== TOAST ====== */
+.toast {
+position: fixed;
+bottom: 80px;
+left: 50%;
+transform: translateX(-50%) translateY(20px);
+background: var(–green);
+color: #000;
+padding: 10px 24px;
+border-radius: 20px;
+font-size: 13px;
+font-weight: 700;
+opacity: 0;
+transition: all .3s;
+z-index: 200;
+pointer-events: none;
+}
+.toast.show {
+opacity: 1;
+transform: translateX(-50%) translateY(0);
+}
+</style>
+
+</head>
+<body>
+
+<div class="top-bar">
+  <h1>PROGRAMME RECOMPOSITION — 6 SEMAINES</h1>
+</div>
+
+<!-- Week selector -->
+
+<div class="week-selector" id="weekSelector"></div>
+<div class="week-focus" id="weekFocus"></div>
+
+<!-- Daily metrics -->
+
+<div class="daily-metrics">
+  <h3>📊 Métriques du jour</h3>
+  <div class="metrics-grid">
+    <div class="metric-item">
+      <label>Poids (kg)</label>
+      <input type="number" step="0.1" id="metricWeight" placeholder="68.0">
+    </div>
+    <div class="metric-item">
+      <label>Énergie (1-10)</label>
+      <input type="number" min="1" max="10" id="metricEnergy" placeholder="7">
+    </div>
+    <div class="metric-item">
+      <label>Sommeil (1-10)</label>
+      <input type="number" min="1" max="10" id="metricSleep" placeholder="7">
+    </div>
+  </div>
+</div>
+
+<!-- Motor alerts -->
+
+<div class="motor-alert" id="motorAlert">
+  <h4 id="motorTitle"></h4>
+  <p id="motorText"></p>
+  <div class="alert-actions">
+    <button class="reco-confirm apply" onclick="confirmMotor(true)">✅ Appliquer</button>
+    <button class="reco-confirm ignore" onclick="confirmMotor(false)">❌ Ignorer</button>
+  </div>
+</div>
+
+<!-- Day tabs -->
+
+<div class="day-tabs" id="dayTabs"></div>
+
+<!-- Session cards (generated by JS) -->
+
+<div id="sessionsContainer"></div>
+
+<!-- Toast -->
+
+<div class="toast" id="toast">✓ Sauvegardé</div>
+
+<!-- Bottom bar -->
+
+<div class="bottom-bar">
+  <button class="btn-save" onclick="saveData()">💾 Sauvegarder séance</button>
+  <button class="btn-export" onclick="exportData()">📤</button>
+</div>
+
+<script>
+// ============================================================
+// PROGRAMME DATA
+// ============================================================
+const WEEKS = [
+  { num: 1, focus: "CALIBRATION — Trouver tes charges de travail", cardio: "Marche inclinée 10% — 15 min" },
+  { num: 2, focus: "FONDATION — Charges établies, focus technique + tempo", cardio: "Marche inclinée 12% — 18 min" },
+  { num: 3, focus: "PROGRESSION — Augmentation charges/reps si RIR atteint", cardio: "Marche inclinée 12% — 20 min" },
+  { num: 4, focus: "INTENSIFICATION — Volume augmenté si récupération OK", cardio: "Marche inclinée 13% — 22 min" },
+  { num: 5, focus: "PEAK — Intensité maximale avant deload", cardio: "Marche inclinée 14% — 25 min" },
+  { num: 6, focus: "DELOAD ACTIF — Volume -40%, charges à 70%", cardio: "Marche inclinée 15% — 25 min" },
+];
+
+const SESSIONS = [
+  {
+    id: "j1", day: "DIM", name: "PUSH A — Priorité Pectoraux",
+    objective: "Hypertrophie pectoraux (toutes portions) + épaules + triceps",
+    warmupGen: "Marche inclinée 10-12% — 5 min progressif",
+    warmupSpec: "Rotations d'épaules élastique (2×15) • Pull-apart (2×15) • Pompes légères (1×10) • DC barre vide (2×12)",
+    exercises: [
+      { name: "Développé couché barre", sets: 4, reps: "8-10", rir: 2, rest: "2:30", tempo: "3-1-1-0" },
+      { name: "Développé incliné haltères", sets: 3, reps: "10-12", rir: 2, rest: "2:00", tempo: "3-1-1-0" },
+      { name: "Écarté incliné haltères", sets: 3, reps: "12-15", rir: 1, rest: "1:30", tempo: "3-1-1-0" },
+      { name: "Dips pectoraux", sets: 3, reps: "8-12", rir: 2, rest: "2:00", tempo: "2-0-1-0" },
+      { name: "Élévations latérales haltères", sets: 4, reps: "12-15", rir: 1, rest: "1:15", tempo: "2-0-1-1" },
+      { name: "Développé militaire haltères assis", sets: 3, reps: "10-12", rir: 2, rest: "2:00", tempo: "3-1-1-0" },
+      { name: "Extensions triceps poulie (corde)", sets: 3, reps: "12-15", rir: 1, rest: "1:15", tempo: "2-1-1-0" },
+    ],
+    abdos: "A",
+    stretches: ["Pec stretch porte (30s/côté)", "Triceps étirement overhead (30s/côté)", "Épaule cross-body (30s/côté)"]
+  },
+  {
+    id: "j2", day: "LUN", name: "PULL A — Priorité Dos Largeur",
+    objective: "Hypertrophie dos (V-taper) + trapèzes + biceps",
+    warmupGen: "Marche inclinée 10-12% — 5 min progressif",
+    warmupSpec: "Rotations d'épaules (2×15) • Band pull-apart (2×15) • Suspension barre fixe 30s • Rowings élastique (2×12)",
+    exercises: [
+      { name: "Tractions prise large (assistées)", sets: 4, reps: "6-10", rir: 2, rest: "2:30", tempo: "2-0-1-1" },
+      { name: "Rowing barre pronation", sets: 4, reps: "8-10", rir: 2, rest: "2:00", tempo: "3-1-1-0" },
+      { name: "Tirage vertical poulie large", sets: 3, reps: "10-12", rir: 2, rest: "1:45", tempo: "3-1-1-0" },
+      { name: "Rowing un bras haltère", sets: 3, reps: "10-12", rir: 1, rest: "1:30", tempo: "3-1-1-0" },
+      { name: "Face pull poulie (corde)", sets: 3, reps: "15-20", rir: 1, rest: "1:15", tempo: "2-1-1-1" },
+      { name: "Shrugs haltères", sets: 4, reps: "12-15", rir: 1, rest: "1:15", tempo: "2-1-1-1" },
+      { name: "Curl barre EZ", sets: 3, reps: "10-12", rir: 2, rest: "1:30", tempo: "3-1-1-0" },
+    ],
+    abdos: "B",
+    stretches: ["Lat stretch (30s/côté)", "Biceps stretch mur (30s/côté)", "Cat-cow (10 reps lentes)"]
+  },
+  {
+    id: "j3", day: "MAR", name: "LEGS A — Quadriceps & Fessiers",
+    objective: "Hypertrophie quadriceps + fessiers + ischios + mollets",
+    warmupGen: "Marche inclinée 10-12% — 5 min progressif",
+    warmupSpec: "Squats PDC (2×15) • Fentes marchées (1×10/jambe) • Activation fessiers élastique (2×15) • Mollets PDC (2×15)",
+    exercises: [
+      { name: "Squat barre (back squat)", sets: 4, reps: "8-10", rir: 2, rest: "3:00", tempo: "3-1-1-0" },
+      { name: "Presse à cuisses", sets: 4, reps: "10-12", rir: 2, rest: "2:30", tempo: "3-1-1-0" },
+      { name: "Fentes bulgares haltères", sets: 3, reps: "10-12/j", rir: 2, rest: "2:00", tempo: "2-1-1-0" },
+      { name: "Hip thrust barre", sets: 4, reps: "10-12", rir: 1, rest: "2:00", tempo: "2-1-2-0" },
+      { name: "Leg curl allongé", sets: 3, reps: "12-15", rir: 1, rest: "1:30", tempo: "3-1-1-0" },
+      { name: "Mollets debout (machine)", sets: 4, reps: "15-20", rir: 1, rest: "1:00", tempo: "2-1-1-1" },
+    ],
+    abdos: "C",
+    stretches: ["Quad stretch debout (30s/côté)", "Pigeon stretch (30s/côté)", "Ischio étirement (30s/côté)"]
+  },
+  {
+    id: "j4", day: "MER", name: "PUSH B — Priorité Épaules",
+    objective: "Hypertrophie épaules (3 faisceaux) + pectoraux + triceps",
+    warmupGen: "Marche inclinée 10-12% — 5 min progressif",
+    warmupSpec: "Rotations élastique (2×15) • Élévations lat légères (2×15) • DM barre vide (2×10) • Pompes (1×10)",
+    exercises: [
+      { name: "Développé militaire barre debout", sets: 4, reps: "6-8", rir: 2, rest: "2:30", tempo: "3-1-1-0" },
+      { name: "Élévations latérales haltères", sets: 4, reps: "12-15", rir: 1, rest: "1:15", tempo: "2-0-1-1" },
+      { name: "Élévations lat poulie basse (1 bras)", sets: 3, reps: "12-15", rir: 1, rest: "1:15", tempo: "2-0-1-1" },
+      { name: "Oiseau inversé haltères", sets: 3, reps: "12-15", rir: 1, rest: "1:15", tempo: "2-1-1-1" },
+      { name: "Développé couché haltères", sets: 3, reps: "10-12", rir: 2, rest: "2:00", tempo: "3-1-1-0" },
+      { name: "Poulie vis-à-vis (pec-deck câble)", sets: 3, reps: "12-15", rir: 1, rest: "1:30", tempo: "3-1-1-0" },
+      { name: "Dips triceps", sets: 3, reps: "10-15", rir: 1, rest: "1:30", tempo: "2-0-1-0" },
+      { name: "Barre au front (skullcrusher)", sets: 3, reps: "10-12", rir: 2, rest: "1:30", tempo: "3-1-1-0" },
+    ],
+    abdos: "A",
+    stretches: ["Épaule stretch (30s/côté)", "Pec stretch (30s/côté)", "Triceps overhead (30s/côté)"]
+  },
+  {
+    id: "j5", day: "JEU", name: "PULL B — Dos Épaisseur + Trapèzes + Cou",
+    objective: "Hypertrophie dos épaisseur + trapèzes + cou + biceps + avant-bras",
+    warmupGen: "Marche inclinée 10-12% — 5 min progressif",
+    warmupSpec: "Rotations épaules (2×15) • Band pull-apart (2×15) • Rowings élastique (2×12) • Flexions cervicales légères (1×10)",
+    exercises: [
+      { name: "Rowing barre supination (Yates)", sets: 4, reps: "8-10", rir: 2, rest: "2:30", tempo: "3-1-1-0" },
+      { name: "Tirage horizontal poulie serrée", sets: 4, reps: "10-12", rir: 2, rest: "2:00", tempo: "3-1-1-0" },
+      { name: "Tirage vertical poulie neutre", sets: 3, reps: "10-12", rir: 2, rest: "1:45", tempo: "3-1-1-0" },
+      { name: "Pullover haltère", sets: 3, reps: "12-15", rir: 1, rest: "1:30", tempo: "3-1-1-0" },
+      { name: "Shrugs barre (derrière)", sets: 4, reps: "10-12", rir: 1, rest: "1:30", tempo: "2-1-2-1" },
+      { name: "Flexion cervicale (plaque)", sets: 3, reps: "15-20", rir: 2, rest: "1:00", tempo: "2-0-1-0" },
+      { name: "Curl haltères alternés (supination)", sets: 3, reps: "10-12", rir: 2, rest: "1:30", tempo: "3-1-1-0" },
+      { name: "Curl marteau haltères", sets: 3, reps: "10-12", rir: 1, rest: "1:15", tempo: "2-0-1-1" },
+      { name: "Curl poignets barre", sets: 3, reps: "15-20", rir: 1, rest: "1:00", tempo: "2-0-1-0" },
+    ],
+    abdos: "B",
+    stretches: ["Lat stretch (30s/côté)", "Biceps stretch (30s/côté)", "Neck stretch latéral (20s/côté)"]
+  },
+  {
+    id: "j6", day: "VEN", name: "LEGS B — Priorité Fessiers & Ischios",
+    objective: "Hypertrophie fessiers + ischios + quadriceps + mollets",
+    warmupGen: "Marche inclinée 10-12% — 5 min progressif",
+    warmupSpec: "Squats PDC (2×15) • Activation fessiers élastique (2×20) • Good mornings PDC (2×12) • Mollets (2×15)",
+    exercises: [
+      { name: "Hip thrust barre", sets: 4, reps: "8-10", rir: 2, rest: "2:30", tempo: "2-1-2-0" },
+      { name: "Soulevé de terre roumain haltères", sets: 4, reps: "10-12", rir: 2, rest: "2:00", tempo: "3-1-1-0" },
+      { name: "Squat goblet (profond)", sets: 3, reps: "12-15", rir: 1, rest: "2:00", tempo: "3-1-1-0" },
+      { name: "Fentes marchées haltères", sets: 3, reps: "10-12/j", rir: 1, rest: "2:00", tempo: "2-0-1-0" },
+      { name: "Leg curl allongé", sets: 3, reps: "12-15", rir: 1, rest: "1:30", tempo: "3-1-1-0" },
+      { name: "Abducteur machine", sets: 3, reps: "15-20", rir: 1, rest: "1:15", tempo: "2-0-1-1" },
+      { name: "Mollets assis (machine)", sets: 4, reps: "15-20", rir: 1, rest: "1:00", tempo: "2-1-1-1" },
+    ],
+    abdos: "C",
+    stretches: ["Pigeon stretch profond (30s/côté)", "Ischio stretch (30s/côté)", "Quad stretch (30s/côté)", "Fessier stretch (30s/côté)"]
+  },
+];
+
+const ABDOS = {
+  A: [
+    "Crunch câble poulie haute — 15 reps",
+    "Planche latérale — 30s/côté",
+    "Relevé de jambes suspendu — 12 reps"
+  ],
+  B: [
+    "Rotation russe (Russian twist) — 20 reps",
+    "Crunch inversé — 15 reps",
+    "Planche frontale — 45s"
+  ],
+  C: [
+    "Bicycle crunch — 20 reps total",
+    "Vacuum abdominal — 4×10s",
+    "Relevé de genoux obliques — 12/côté"
+  ]
+};
+
+// ============================================================
+// STATE
+// ============================================================
+let currentWeek = 1;
+let currentDay = 0;
+let data = {};
+
+function getKey(week, day, exIdx, field) {
+  return `w${week}_d${day}_e${exIdx}_${field}`;
+}
+function getMetricKey(week, day, field) {
+  return `w${week}_d${day}_m_${field}`;
+}
+
+// ============================================================
+// RENDER
+// ============================================================
+function renderWeekSelector() {
+  const el = document.getElementById('weekSelector');
+  el.innerHTML = WEEKS.map(w =>
+    `<button class="week-btn ${w.num === currentWeek ? 'active' : ''}" onclick="selectWeek(${w.num})">S${w.num}</button>`
+  ).join('');
+  document.getElementById('weekFocus').textContent = WEEKS[currentWeek-1].focus;
+}
+
+function renderDayTabs() {
+  const el = document.getElementById('dayTabs');
+  el.innerHTML = SESSIONS.map((s, i) =>
+    `<button class="day-tab ${i === currentDay ? 'active' : ''}" onclick="selectDay(${i})">
+      <span class="day-num">${s.day}</span>
+      <span class="day-name">Jour ${i+1}</span>
+    </button>`
+  ).join('');
+}
+
+function renderSessions() {
+  const container = document.getElementById('sessionsContainer');
+  container.innerHTML = SESSIONS.map((session, sIdx) => {
+    const isActive = sIdx === currentDay;
+    const week = WEEKS[currentWeek - 1];
+
+    let html = `<div class="session-card ${isActive ? 'active' : ''}" id="session-${sIdx}">`;
+
+    // Header
+    html += `<div class="session-header">
+      <h2>${session.name}</h2>
+      <div class="objective">🎯 ${session.objective}</div>
+    </div>`;
+
+    // Warmup
+    html += `<div class="warmup-toggle" onclick="toggleWarmup(this)">
+      Échauffement <span class="arrow">▼</span>
+    </div>
+    <div class="warmup-content">
+      <strong>Général :</strong> ${session.warmupGen}<br><br>
+      <strong>Spécifique :</strong> ${session.warmupSpec}
+    </div>`;
+
+    // Exercises
+    html += `<div class="exercise-list">`;
+    session.exercises.forEach((ex, eIdx) => {
+      const chargeVal = data[getKey(currentWeek, sIdx, eIdx, 'charge')] || '';
+      const repsVal = data[getKey(currentWeek, sIdx, eIdx, 'reps')] || '';
+      const rirVal = data[getKey(currentWeek, sIdx, eIdx, 'rir')] || '';
+      const echecVal = data[getKey(currentWeek, sIdx, eIdx, 'echec')] || 'N';
+      const diffVal = data[getKey(currentWeek, sIdx, eIdx, 'diff')] || '';
+      const restVal = data[getKey(currentWeek, sIdx, eIdx, 'restReal')] || '';
+
+      // Decision engine
+      let reco = { icon: '', text: '', cls: '' };
+      if (rirVal !== '' && !isNaN(rirVal)) {
+        const delta = parseInt(rirVal) - ex.rir;
+        if (echecVal === 'O') {
+          reco = { icon: '🔴', text: '⚠ RÉDUIRE charge -10%', cls: 'danger' };
+        } else if (delta <= -2) {
+          reco = { icon: '🔵', text: '↗ +2.5kg ou +2 reps', cls: 'success' };
+        } else if (delta === -1) {
+          reco = { icon: '🔵', text: '↗ Prêt à progresser', cls: 'success' };
+        } else if (delta >= 2) {
+          reco = { icon: '🟡', text: '↘ -2.5kg ou -2 reps', cls: 'warning' };
+        } else {
+          reco = { icon: '🟢', text: '✓ MAINTENIR', cls: '' };
+        }
+      }
+
+      const statusIcon = reco.icon || '⬜';
+
+      html += `<div class="exercise-item" id="ex-${sIdx}-${eIdx}">
+        <div class="exercise-header" onclick="toggleExercise('ex-${sIdx}-${eIdx}')">
+          <div class="ex-num">${eIdx + 1}</div>
+          <div class="ex-info">
+            <div class="ex-name">${ex.name}</div>
+            <div class="ex-params">${ex.sets}×${ex.reps} · RIR ${ex.rir} · ${ex.rest} · ${ex.tempo}</div>
+          </div>
+          <div class="ex-status">${statusIcon}</div>
+          <div class="ex-expand">▼</div>
+        </div>
+        <div class="tracking-panel">
+          <div class="tracking-grid">
+            <div class="track-field">
+              <label>Charge (kg)</label>
+              <input type="number" step="0.5" value="${chargeVal}" onchange="updateField(${currentWeek},${sIdx},${eIdx},'charge',this.value)">
+            </div>
+            <div class="track-field">
+              <label>Reps réalisées</label>
+              <input type="number" value="${repsVal}" onchange="updateField(${currentWeek},${sIdx},${eIdx},'reps',this.value)">
+            </div>
+            <div class="track-field">
+              <label>RIR réel</label>
+              <input type="number" min="0" max="5" value="${rirVal}" onchange="updateField(${currentWeek},${sIdx},${eIdx},'rir',this.value);renderSessions()">
+            </div>
+            <div class="track-field">
+              <label>Échec (O/N)</label>
+              <select onchange="updateField(${currentWeek},${sIdx},${eIdx},'echec',this.value);renderSessions()">
+                <option value="N" ${echecVal==='N'?'selected':''}>Non</option>
+                <option value="O" ${echecVal==='O'?'selected':''}>Oui</option>
+              </select>
+            </div>
+            <div class="track-field">
+              <label>Difficulté (1-10)</label>
+              <input type="number" min="1" max="10" value="${diffVal}" onchange="updateField(${currentWeek},${sIdx},${eIdx},'diff',this.value)">
+            </div>
+            <div class="track-field">
+              <label>Repos réel</label>
+              <input type="text" placeholder="2:30" value="${restVal}" onchange="updateField(${currentWeek},${sIdx},${eIdx},'restReal',this.value)">
+            </div>
+          </div>
+          ${reco.text ? `<div class="reco-bar">
+            <span class="reco-icon">${reco.icon}</span>
+            <span class="reco-text">${reco.text}</span>
+            <button class="reco-confirm apply" onclick="applyReco(${sIdx},${eIdx},'apply')">✅</button>
+            <button class="reco-confirm ignore" onclick="applyReco(${sIdx},${eIdx},'ignore')">❌</button>
+          </div>` : ''}
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
+
+    // Abdos
+    const abdosCircuit = ABDOS[session.abdos];
+    html += `<div class="abdos-section">
+      <h3>🔥 Abdos — Circuit ${session.abdos} (3 tours · 45s repos)</h3>
+      ${abdosCircuit.map((a, i) => `<div class="abdos-item"><div class="abdos-num">${i+1}</div>${a}</div>`).join('')}
+    </div>`;
+
+    // Cardio
+    html += `<div class="cardio-section">
+      <h3>🏃 Cardio post-séance</h3>
+      <p>${week.cardio}</p>
+    </div>`;
+
+    // Stretches
+    html += `<div class="stretch-section">
+      <h3>🧘 Étirements fin de séance (5-7 min)</h3>
+      ${session.stretches.map((s, i) => `<div class="abdos-item"><div class="abdos-num" style="background:rgba(78,140,255,0.15);color:var(--blue)">${i+1}</div>${s}</div>`).join('')}
+    </div>`;
+
+    html += `</div>`;
+    return html;
+  }).join('');
+
+  checkMotorAlerts();
+}
+
+// ============================================================
+// INTERACTIONS
+// ============================================================
+function selectWeek(n) {
+  currentWeek = n;
+  renderWeekSelector();
+  loadMetrics();
+  renderSessions();
+}
+
+function selectDay(n) {
+  currentDay = n;
+  renderDayTabs();
+  renderSessions();
+}
+
+function toggleExercise(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+
+function toggleWarmup(el) {
+  el.classList.toggle('open');
+  el.nextElementSibling.classList.toggle('open');
+}
+
+function updateField(week, day, exIdx, field, value) {
+  data[getKey(week, day, exIdx, field)] = value;
+}
+
+function applyReco(sIdx, eIdx, action) {
+  const key = getKey(currentWeek, sIdx, eIdx, 'recoAction');
+  data[key] = action;
+  showToast(action === 'apply' ? '✅ Recommandation appliquée' : '❌ Recommandation ignorée');
+}
+
+function loadMetrics() {
+  ['Weight','Energy','Sleep'].forEach(f => {
+    const key = getMetricKey(currentWeek, currentDay, f.toLowerCase());
+    const el = document.getElementById('metric' + f);
+    el.value = data[key] || '';
+  });
+}
+
+function saveMetrics() {
+  ['Weight','Energy','Sleep'].forEach(f => {
+    const el = document.getElementById('metric' + f);
+    if (el.value) {
+      data[getMetricKey(currentWeek, currentDay, f.toLowerCase())] = el.value;
+    }
+  });
+}
+
+// ============================================================
+// MOTOR ALERTS (global analysis)
+// ============================================================
+function checkMotorAlerts() {
+  const alert = document.getElementById('motorAlert');
+  const energy = parseFloat(document.getElementById('metricEnergy').value);
+  const sleep = parseFloat(document.getElementById('metricSleep').value);
+
+  if (energy && energy < 5) {
+    showMotorAlert('warning', '⚡ Énergie faible détectée',
+      `Ton énergie est à ${energy}/10. Si ça persiste 3+ jours, le moteur recommande de retirer 1 série par exercice et réduire le cardio de 5 min.`);
+  } else if (sleep && sleep < 5) {
+    showMotorAlert('warning', '😴 Sommeil insuffisant détecté',
+      `Ton sommeil est à ${sleep}/10. Priorise la récupération. Si ça dure, une réduction de volume sera recommandée.`);
+  } else if (currentWeek === 6) {
+    showMotorAlert('danger', '⚠ SEMAINE DELOAD',
+      'Volume réduit de 40%. Garde les mêmes exercices mais à 70% de tes charges habituelles. RIR cible +3.');
+  } else {
+    alert.classList.remove('show');
+  }
+}
+
+function showMotorAlert(cls, title, text) {
+  const alert = document.getElementById('motorAlert');
+  alert.className = `motor-alert show ${cls}`;
+  document.getElementById('motorTitle').textContent = title;
+  document.getElementById('motorText').textContent = text;
+}
+
+function confirmMotor(apply) {
+  const alert = document.getElementById('motorAlert');
+  alert.classList.remove('show');
+  showToast(apply ? '✅ Ajustement appliqué' : '⏸ Ajustement reporté');
+}
+
+// ============================================================
+// SAVE / EXPORT
+// ============================================================
+function saveData() {
+  saveMetrics();
+  try {
+    const json = JSON.stringify(data);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `programme_s${currentWeek}_j${currentDay+1}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('💾 Données sauvegardées !');
+  } catch(e) {
+    showToast('💾 Données en mémoire');
+  }
+}
+
+function exportData() {
+  let txt = `PROGRAMME RECOMPOSITION — SEMAINE ${currentWeek}\n${'='.repeat(50)}\n\n`;
+  SESSIONS.forEach((s, sIdx) => {
+    txt += `${s.day} — ${s.name}\n${'-'.repeat(40)}\n`;
+    s.exercises.forEach((ex, eIdx) => {
+      const charge = data[getKey(currentWeek, sIdx, eIdx, 'charge')] || '-';
+      const reps = data[getKey(currentWeek, sIdx, eIdx, 'reps')] || '-';
+      const rir = data[getKey(currentWeek, sIdx, eIdx, 'rir')] || '-';
+      txt += `  ${ex.name}: ${charge}kg × ${reps} reps (RIR ${rir})\n`;
+    });
+    txt += '\n';
+  });
+  const blob = new Blob([txt], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `recap_semaine_${currentWeek}.txt`;
+  a.click();
+  showToast('📤 Export terminé');
+}
+
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2000);
+}
+
+// Listen for metric changes
+['metricWeight','metricEnergy','metricSleep'].forEach(id => {
+  document.getElementById(id).addEventListener('change', function() {
+    saveMetrics();
+    checkMotorAlerts();
+  });
+});
+
+// ============================================================
+// INIT
+// ============================================================
+renderWeekSelector();
+renderDayTabs();
+renderSessions();
+</script>
+
+</body>
+</html>
